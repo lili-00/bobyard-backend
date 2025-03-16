@@ -62,4 +62,3 @@
 
 ### Database Migration
 - The script for populating the data is at /resources directory.
-- 
