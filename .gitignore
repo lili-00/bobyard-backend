@@ -1,0 +1,45 @@
+# Ignore Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore virtual environments
+.venv/
+env/
+venv/
+
+# Ignore environment variables
+.env
+*.env
+
+# Ignore database files
+*.sqlite3
+*.db
+*.sql
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore compiled files
+*.so
+*.pyd
+*.dll
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Ignore cache
+.cache/
+dist/
+build/
+
+# Ignore dependencies installed via pip
+pip-wheel-metadata/
