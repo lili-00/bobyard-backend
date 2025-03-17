@@ -25,7 +25,6 @@ class PostCommentRequest(BaseModel):
 
 
 class EditCommentTextRequest(BaseModel):
-    comment_id: int
     text: str
 
 

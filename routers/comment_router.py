@@ -26,10 +26,8 @@ async def post_comment(comment: PostCommentRequest, db: AsyncSession = Depends(g
     return {"message": "Comment posted!", "comment_id": new_comment.comment_id}
 
 
-@router.put("/update")
-async def edit_comment(edited_comment: EditCommentTextRequest, db: AsyncSession = Depends(get_db)):
-    comment_id = edited_comment.comment_id
-
+@router.put("/update/{comment_id}")
+async def edit_comment(comment_id: int, edited_comment: EditCommentTextRequest, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(Comment)
         .where(Comment.comment_id == comment_id)
