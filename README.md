@@ -22,7 +22,7 @@
 
 2. **Create a Virtual Environment**
    ```bash
-   python -m venv .venv
+   python3.11 -m venv .venv
    ```
 
 3. **Activate the Virtual Environment**
@@ -54,7 +54,7 @@
 ### Running the Application
 1. **Start the FastAPI Server**
    ```bash
-   uvicorn main:app --reload
+   python -m uvicorn main:app --reload
    ```
 
 2. **Access the API**

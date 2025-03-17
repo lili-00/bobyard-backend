@@ -22,10 +22,12 @@ class PostCommentRequest(BaseModel):
     user_id: int
     author: str
     text: str
+    image: str
 
 
 class EditCommentTextRequest(BaseModel):
     text: str
+    image: str
 
 
 class AllCommentsResponse(BaseModel):

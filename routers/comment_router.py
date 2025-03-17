@@ -16,7 +16,8 @@ async def post_comment(comment: PostCommentRequest, db: AsyncSession = Depends(g
     new_comment = Comment(
         user_id=comment.user_id,
         text=comment.text,
-        author=comment.author
+        author=comment.author,
+        image=comment.image
     )
 
     db.add(new_comment)
@@ -44,11 +45,17 @@ async def edit_comment(comment_id: int, edited_comment: EditCommentTextRequest, 
 
     # Update the comment
     comment.text = edited_comment.text
+    comment.image = edited_comment.image
 
     await db.commit()
     await db.refresh(comment)
 
-    return {"message": "Comment updated successfully!", "comment_id": comment.comment_id, "updated_text": comment.text}
+    return {
+        "message": "Comment updated successfully!",
+        "comment_id": comment.comment_id,
+        "text": comment.text,
+        "image": comment.image
+    }
 
 
 @router.delete("/delete/{comment_id}")
