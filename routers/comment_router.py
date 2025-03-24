@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from fastapi import APIRouter, HTTPException
@@ -10,28 +11,31 @@ from model.models import PostCommentRequest, Comment, EditCommentTextRequest, Al
 
 router = APIRouter(prefix="/api/comments", tags=["comments"])
 
+logger = logging.getLogger("__name__")
 
 @router.post("/post")
 async def post_comment(comment: PostCommentRequest, db: AsyncSession = Depends(get_db)):
+
     new_comment = Comment(
-        user_id=comment.user_id,
-        text=comment.text,
         author=comment.author,
-        image=comment.image
+        text=comment.text,
+        image=comment.image,
     )
+
+    logger.info(f"Adding new comment: {new_comment} to database")
 
     db.add(new_comment)
     await db.commit()
     await db.refresh(new_comment)
 
-    return {"message": "Comment posted!", "comment_id": new_comment.comment_id}
+    return {"message": "Comment posted!", "id": new_comment.id}
 
 
 @router.put("/update/{comment_id}")
 async def edit_comment(comment_id: int, edited_comment: EditCommentTextRequest, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(Comment)
-        .where(Comment.comment_id == comment_id)
+        .where(Comment.id == comment_id)
     )
 
     comment = result.scalar_one_or_none()
@@ -52,7 +56,7 @@ async def edit_comment(comment_id: int, edited_comment: EditCommentTextRequest, 
 
     return {
         "message": "Comment updated successfully!",
-        "comment_id": comment.comment_id,
+        "id": comment.id,
         "text": comment.text,
         "image": comment.image
     }
@@ -62,7 +66,7 @@ async def edit_comment(comment_id: int, edited_comment: EditCommentTextRequest, 
 async def delete_comment(comment_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(Comment)
-        .where(Comment.comment_id == comment_id)
+        .where(Comment.id == comment_id)
     )
 
     comment = result.scalar_one_or_none()
@@ -77,7 +81,7 @@ async def delete_comment(comment_id: int, db: AsyncSession = Depends(get_db)):
     await db.delete(comment)
     await db.commit()
 
-    return {"message": "Comment deleted successfully!", "comment_id": comment.comment_id}
+    return {"message": "Comment deleted successfully!", "id": comment.id}
 
 
 @router.get("/all", response_model=List[AllCommentsResponse])

@@ -29,16 +29,31 @@ def import_data():
     conn = psycopg2.connect(**DB_CONFIG)
     cur = conn.cursor()
 
+    # Drop the table if it already exists
+    cur.execute("DROP TABLE IF EXISTS comments;")
+
+    # Create the comments table
+    cur.execute('''
+        CREATE TABLE comments (
+            id SERIAL PRIMARY KEY,
+            author TEXT,
+            text TEXT,
+            date TIMESTAMPTZ DEFAULT NOW(),
+            likes INTEGER DEFAULT 0,
+            image TEXT
+        );
+        ''')
+
     sql = """
-  INSERT INTO comments (user_id, author, text, date, likes, image)
-  VALUES (%s, %s, %s, %s, %s, %s)
+  INSERT INTO comments (author, text, date, likes, image)
+  VALUES (%s, %s, %s, %s, %s)
   """
 
   # Insert every comment
     for comment in data['comments']:
         cur.execute(
             sql,
-            (comment["id"], comment["author"], comment["text"], comment["date"], comment["likes"], comment["image"])
+            (comment["author"], comment["text"], comment["date"], comment["likes"], comment["image"])
         )
 
     conn.commit()

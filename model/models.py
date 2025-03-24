@@ -9,17 +9,19 @@ Base = declarative_base()
 class Comment(Base):
     __tablename__ = "comments"
 
-    comment_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer)
-    author = Column(String(100), nullable=False)
-    text = Column(Text)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    author = Column(Text, nullable=False)
+    text = Column(Text, nullable=True)
     date = Column(TIMESTAMP(timezone=True), default=datetime.utcnow)
     likes = Column(Integer, default=0)
-    image = Column(Text)
+    image = Column(Text, nullable=True)
+
+    orm_mode = True
+
+
 
 
 class PostCommentRequest(BaseModel):
-    user_id: int
     author: str
     text: str
     image: str
@@ -31,8 +33,7 @@ class EditCommentTextRequest(BaseModel):
 
 
 class AllCommentsResponse(BaseModel):
-    comment_id: int
-    user_id: int
+    id: int
     author: str
     text: str
     date: datetime
