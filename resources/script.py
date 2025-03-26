@@ -35,7 +35,8 @@ def import_data():
     # Create the comments table
     cur.execute('''
         CREATE TABLE comments (
-            id SERIAL PRIMARY KEY,
+            id INTEGER PRIMARY KEY,
+            parent INTEGER,
             author TEXT,
             text TEXT,
             date TIMESTAMPTZ DEFAULT NOW(),
@@ -45,15 +46,17 @@ def import_data():
         ''')
 
     sql = """
-  INSERT INTO comments (author, text, date, likes, image)
-  VALUES (%s, %s, %s, %s, %s)
+  INSERT INTO comments (id, parent, author, text, date, likes, image)
+  VALUES (%s, %s, %s, %s, %s, %s, %s)
   """
 
-  # Insert every comment
+    # Insert every comment
     for comment in data['comments']:
+        parent = comment["parent"] if comment["parent"] != "" else None
         cur.execute(
             sql,
-            (comment["author"], comment["text"], comment["date"], comment["likes"], comment["image"])
+            (comment["id"], parent, comment["author"], comment["text"], comment["date"], comment["likes"],
+             comment["image"])
         )
 
     conn.commit()

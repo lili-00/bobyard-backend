@@ -10,6 +10,7 @@ class Comment(Base):
     __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    parent = Column(Integer, nullable=False)
     author = Column(Text, nullable=False)
     text = Column(Text, nullable=True)
     date = Column(TIMESTAMP(timezone=True), default=datetime.utcnow)
@@ -17,8 +18,6 @@ class Comment(Base):
     image = Column(Text, nullable=True)
 
     orm_mode = True
-
-
 
 
 class PostCommentRequest(BaseModel):
@@ -43,3 +42,18 @@ class AllCommentsResponse(BaseModel):
     class Config:
         # orm_mode = True
         from_attributes = True
+
+
+class CommentWithReplies(BaseModel):
+    id: int
+    parent: int | None
+    author: str
+    text: str
+    date: datetime
+    likes: int
+    image: str | None
+    replies: ["CommentWithReplies"] = []
+
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
